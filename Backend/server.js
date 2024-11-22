@@ -1,29 +1,12 @@
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-const fs = require("fs");
-const axios = require("axios");
-
-const videoRoutes = require("./routes/videos");
-const movieRoutes = require("./routes/movies");
-
+const express = require('express');
+const path = require('path');
 const app = express();
-const PORT = 5000;
 
+// Serve static files from the "videos" folder
+app.use('/videos', express.static(path.join(__dirname, 'videos')));
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Static file serving for videos and thumbnails
-app.use("/videos", express.static(path.join(__dirname, "videos")));
-app.use("/thumbnails", express.static(path.join(__dirname, "thumbnails")));
-app.use("/movies", express.static(path.join(__dirname,  "movies")));
-// Use the videos route
-app.use("/api/videos", videoRoutes);
-app.use("/api/movies", movieRoutes);
-
-// Start server
+// Start the server
+const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
