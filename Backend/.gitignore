@@ -3,6 +3,8 @@
 # dependencies
 /node_modules
 /videos
+/movies
+/thumbnails
 /.pnp
 .pnp.js
 
