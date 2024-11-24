@@ -19,6 +19,7 @@ const fetchMovieDetails = async (movieName) => {
   try {
     const response = await axios.get(apiUrl);
     const movieDetails = response.data;
+    movieDetails.url = `https://luckybackend.rstechub.com/movies/${movieName}.mp4`
     // Cache the movie details
     movieCache[movieName] = movieDetails;
     return movieDetails;
@@ -40,7 +41,7 @@ const getMoviesData = async () => {
       return {
         id: file,
         title: details?.Title || movieName,
-        url: `http://localhost:${PORT}/movies/${file}`,
+        url: `https://luckybackend.rstechub.com/movies/${file}`,
         poster: details?.Poster || "",
         description: details?.Plot || "No description available.",
         genre: details?.Genre || "Unknown",

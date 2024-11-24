@@ -12,8 +12,8 @@ const getVideoFiles = () => {
   return files.map((file, index) => ({
     id: index + 1,
     title: file.replace(/\.[^/.]+$/, ""), // Remove file extension for title
-    url: `http://localhost:5000/videos/${file}`, // Generate video URL
-    thumbnail: `http://localhost:5000/thumbnails/${file.replace(/\.[^/.]+$/, ".jpg")}` // Assume thumbnails with the same base name
+    url: `https://luckybackend.rstechub.com/videos/${file}`, // Generate video URL
+    thumbnail: `https://luckybackend.rstechub.com/thumbnails/${file.replace(/\.[^/.]+$/, ".jpg")}` // Assume thumbnails with the same base name
   }));
 };
 
