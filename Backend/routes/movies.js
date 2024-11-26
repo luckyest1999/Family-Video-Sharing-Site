@@ -6,11 +6,10 @@ const axios = require("axios");
 const router = express.Router();
 
 const OMDB_API_KEY = "bc31f731";
-const PORT = 5000;
 const movieCache = {};
 
 // Helper function to get movie details dynamically
-const fetchMovieDetails = async (movieName) => {
+const fetchMovieDetails = async (movieName, fileName) => {
   if (movieCache[movieName]) {
     return movieCache[movieName]; // Return cached movie details
   }
@@ -19,13 +18,17 @@ const fetchMovieDetails = async (movieName) => {
   try {
     const response = await axios.get(apiUrl);
     const movieDetails = response.data;
-    movieDetails.url = `https://luckybackend.rstechub.com/movies/${movieName}.mp4`
+
+    // Append the correct file URL to the movie details
+    movieDetails.url = `https://luckybackend.rstechub.com/movies/${fileName}`;
+    movieDetails.id = fileName; // Ensure the original file name is returned
+
     // Cache the movie details
     movieCache[movieName] = movieDetails;
     return movieDetails;
   } catch (error) {
     console.error(`Error fetching details for ${movieName} from OMDB:`, error.message);
-    return null;
+    return { id: fileName, title: movieName, error: "Details not found" };
   }
 };
 
@@ -37,16 +40,17 @@ const getMoviesData = async () => {
   const movies = await Promise.all(
     files.map(async (file) => {
       const movieName = file.replace(/\.[^/.]+$/, ""); // Remove file extension
-      const details = await fetchMovieDetails(movieName);
+      const details = await fetchMovieDetails(movieName, file);
       return {
-        id: file,
+        id: file, // Return the original file name as id
         title: details?.Title || movieName,
-        url: `https://luckybackend.rstechub.com/movies/${file}`,
+        url: details?.url || `https://luckybackend.rstechub.com/movies/${file}`,
         poster: details?.Poster || "",
         description: details?.Plot || "No description available.",
         genre: details?.Genre || "Unknown",
         rating: details?.imdbRating || "N/A",
         year: details?.Year || "Unknown",
+        error: details?.error || null, // Include error details, if any
       };
     })
   );
@@ -69,11 +73,13 @@ router.get("/", async (req, res) => {
 router.get("/:movieName", async (req, res) => {
   try {
     const { movieName } = req.params;
-    const movies = await fetchMovieDetails(movieName);
-    res.json(movies);
+    const fileName = movieName; // Preserve the original file name for the URL
+    const movieNameWithoutExtension = fileName.replace(/\.[^/.]+$/, ""); // Remove file extension
+    const movie = await fetchMovieDetails(movieNameWithoutExtension, fileName);
+    res.json(movie);
   } catch (error) {
-    console.error("Error fetching movies:", error.message);
-    res.status(500).json({ error: "Unable to fetch movies." });
+    console.error("Error fetching movie details:", error.message);
+    res.status(500).json({ error: "Unable to fetch movie details." });
   }
 });
 
