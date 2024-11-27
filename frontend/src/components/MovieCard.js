@@ -1,24 +1,26 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const MovieCard = ({ movie }) => (
-  <div className="bg-white shadow-md rounded overflow-hidden hover:shadow-lg transition duration-300">
-    <img
-      src={movie.poster || "default-poster.jpg"}
-      alt={movie.title}
-      className="w-full h-56 object-cover"
-    />
-    <div className="p-4">
-      <h2 className="text-lg font-semibold text-gray-800">{movie.title}</h2>
-      <p className="text-sm text-gray-600">{movie.genre}</p>
-      <Link
-        to={`/movies/${movie.title}`}
-        className="mt-3 inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition"
-      >
-        View Details
-      </Link>
+const MovieCard = ({ movie }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <img
+        src={movie.poster || "https://via.placeholder.com/150"}
+        alt={movie.title}
+        className="w-full h-48 object-cover"
+      />
+      <div className="p-4">
+        <h3 className="text-lg font-semibold">{movie.title}</h3>
+        <p className="text-sm text-gray-600">{movie.genre}</p>
+        <Link
+          to={`/movies/${movie.id}`}
+          className="mt-2 inline-block bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Play Now
+        </Link>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default MovieCard;
