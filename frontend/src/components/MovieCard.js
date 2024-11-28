@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import  '../styles/MovieCard.scss';
+import styled from "styled-components";
 
 const MovieCard = ({ movie }) => {
   return (
@@ -7,7 +9,7 @@ const MovieCard = ({ movie }) => {
       <img
         src={movie.poster || "https://via.placeholder.com/150"}
         alt={movie.title}
-        className="w-full h-48 object-cover"
+        className="w-full thumb-height"
       />
       <div className="p-4">
         <h3 className="text-lg font-semibold">{movie.title}</h3>
@@ -22,5 +24,40 @@ const MovieCard = ({ movie }) => {
     </div>
   );
 };
+const Movie = styled.div`
+  background: ${({ theme }) => theme.colors.cardBackground};
+  border-radius: 10px;
+  overflow: hidden;
+  transition: ${({ theme }) => theme.transitions.default};
+  color: ${({ theme }) => theme.colors.text};
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 15px rgba(255, 56, 92, 0.2);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  h3 {
+    margin: 10px;
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: ${({ theme }) => theme.fontSizes.large};
+    transition: ${({ theme }) => theme.transitions.default};
+
+    &:hover {
+      color: ${({ theme }) => theme.colors.hover};
+    }
+  }
+
+  p {
+    margin: 5px 10px;
+    color: ${({ theme }) => theme.colors.mutedText};
+    font-size: ${({ theme }) => theme.fontSizes.small};
+  }
+`;
+
 
 export default MovieCard;

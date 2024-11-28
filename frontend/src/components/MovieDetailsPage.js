@@ -1,61 +1,135 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Scrollbar from 'smooth-scrollbar';
+import { API_DOMAIN } from "../constants";
+import "../styles/MovieDetailsPage.scss"
+import "plyr/dist/plyr.css";
+import "../styles/containers.scss"
+import Plyr from "plyr";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const MovieDetailsPage = () => {
-  const { movieId } = useParams(); // Get the movieId (file name) from the URL
+  const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const descriptionRef = useRef(null);
 
   useEffect(() => {
-    // Fetch movie details based on movieId (file name)
+	console.log('Description Ref:', descriptionRef.current); // Check if the ref is assigned correctly
+	if (descriptionRef.current) {
+	  const scrollbar = Scrollbar.init(descriptionRef.current, {
+		damping: 0.1,
+		renderByPixels: true,
+		alwaysShowTracks: true,
+		continuousScrolling: true,
+	  });
+  
+	  return () => {
+		if (scrollbar) scrollbar.destroy(); // Clean up on unmount
+	  };
+	}
+  }, []);
+  
+
+
+  useEffect(() => {
     axios
-      .get(`https://luckybackend.rstechub.com/api/movies/${movieId}`)
+      .get(`${API_DOMAIN}/api/movies/${movieId}`)
       .then((response) => setMovie(response.data))
       .catch((error) => console.error("Error fetching movie details:", error));
   }, [movieId]);
 
+  
+  useEffect(() => {
+    if (movie?.url) {
+      new Plyr("#player", {
+        controls: [
+          "play-large",
+          "play",
+          "progress",
+          "current-time",
+          "duration",
+          "mute",
+          "volume",
+          "settings",
+          "fullscreen",
+        ],
+        settings: ["quality", "speed"],
+        quality: { default: 720, options: [1080, 720, 480, 360] },
+      });
+    }
+  }, [movie]);
+
   if (!movie) return <div>Loading...</div>;
 
   return (
-    <div className="movie-details">
-      <h1 className="text-center text-3xl my-5">{movie.title}</h1>
-      <div className="flex flex-col lg:flex-row items-center p-5">
-        <div className="w-full lg:w-3/5 mt-5 lg:mt-0 lg:ml-5">
-          <div className="bg-gray-100 rounded-lg shadow-lg overflow-hidden">
-            {movie.url ? (
-              <video controls loading="lazy" className="w-full h-auto rounded-md border border-gray-300">
-                <source src={movie.url} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            ) : (
-              <p>Loading video...</p>
-            )}
-          </div>
+	
+    <div>
+		
+      <section class="section section--details">
+		{/*  <!-- details content --> */}
+		<div class="container">
+			<div class="row">
+        {/*  <!-- title --> */}
+				
+				<div class="col-12">
+					<h1 class="section__title section__title--head">{movie.Title}</h1>
+				</div>
+				{/*  <!-- content --> */}
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-  <p className="mt-3 text-gray-700 text-base">{movie.description}</p>
-  <p className="mt-3 text-gray-700 text-base">{movie.description}</p>
+				
+				<div class="col-12 col-xl-6">
+					<div class="item item--details">
+						<div class="row">
+              {/*  <!-- card cover --> */}
+							
+							<div class="col-12 col-sm-5 col-md-5 col-lg-4 col-xl-6 col-xxl-5">
+								<div class="item__cover">
+									<img src={movie.Poster}  alt=""/>
+									<span class="item__rate item__rate--green">{movie.imdbRating}</span>
+								</div>
+							</div>
+							{/* <!-- end card cover --> */}
+{/* 	<!-- card content --> */}
+						
+							<div class="col-12 col-md-7 col-lg-8 col-xl-6 col-xxl-7">
+								<div class="item__content">
+									<ul class="item__meta">
+										<li><span>Director:<span class = "movie-details">{movie.Director}</span></span> </li>
+										<li><span>Cast:<span class = "movie-details">{movie.Actors}</span></span></li>
+										<li><span>Genre:<span class = "movie-details">{movie.Genre}</span></span>
+										</li>
+										<li><span>Released:<span class = "movie-details">{movie.Released}</span></span> </li>
+										<li><span>Running time:<span class = "movie-details">{movie.Runtime}</span></span></li>
+									</ul>
 
-            <p className="mt-3 text-gray-700 text-base">{movie.description}</p>
+									<div class="movie-description" ref={descriptionRef} data-scrollbar="true" tabindex="-1" ><div class="scrollable-content">
+									 {/* Bind ref to this div */}
+										<p>{movie.Plot}</p>
+									</div></div>
+								</div>
+							</div>
+              {/* 	<!-- end card content --> */}
+							
+						</div>
+					</div>
+				</div>
+				{/* <!-- end content -->*/}
 
-            <p className="mt-4 text-sm text-gray-600">
-              <strong className="text-gray-800">Director:</strong> {movie.Director}
-            </p>
-            <p className="mt-2 text-sm text-gray-600">
-              <strong className="text-gray-800">Actors:</strong> {movie.Actors}
-            </p>
-            <p className="mt-2 text-sm text-gray-600">
-              <strong className="text-gray-800">Language:</strong> {movie.Language}
-            </p>
-            <p className="mt-2 text-sm text-gray-600">
-              <strong className="text-gray-800">Plot:</strong> {movie.Plot}
-            </p>
-            <p className="mt-2 text-sm text-gray-600">
-              <strong className="text-gray-800">IMDB Rating:</strong> {movie.imdbRating}
-            </p>
-          </div>
-        </div>
-      </div>
+				{/* <!-- player --> */}
+				<div class="col-12 col-xl-6">
+					
+        <video class= "plyr" id="player" controls crossOrigin="anonymous">
+              <source src={movie.url} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+			
+					</div>
+				{/* <!-- end player --> */}
+			</div>
+		</div>
+		{/* <!-- end details content --> */}
+	</section>
     </div>
   );
 };

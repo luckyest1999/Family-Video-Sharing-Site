@@ -4,6 +4,7 @@ const fs = require("fs");
 const axios = require("axios");
 
 const router = express.Router();
+const { API_DOMAIN } = require('../constants');
 
 const OMDB_API_KEY = "bc31f731";
 const movieCache = {};
@@ -20,7 +21,7 @@ const fetchMovieDetails = async (movieName, fileName) => {
     const movieDetails = response.data;
 
     // Append the correct file URL to the movie details
-    movieDetails.url = `https://luckybackend.rstechub.com/movies/${fileName}`;
+    movieDetails.url = `${API_DOMAIN}/movies/${fileName}`;
     movieDetails.id = fileName; // Ensure the original file name is returned
 
     // Cache the movie details
@@ -44,7 +45,7 @@ const getMoviesData = async () => {
       return {
         id: file, // Return the original file name as id
         title: details?.Title || movieName,
-        url: details?.url || `https://luckybackend.rstechub.com/movies/${file}`,
+        url: details?.url || `${API_DOMAIN}/movies/${file}`,
         poster: details?.Poster || "",
         description: details?.Plot || "No description available.",
         genre: details?.Genre || "Unknown",

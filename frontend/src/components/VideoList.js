@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
+import { API_DOMAIN } from '../constants';
 
 Modal.setAppElement("#root"); // Accessibility: Attach the modal to the root div
 
@@ -11,7 +12,8 @@ const VideoList = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch("https://luckybackend.rstechub.com/api/videos");
+        const url = API_DOMAIN+"/api/videos";
+        const response = await fetch(url);
         const data = await response.json();
         setVideos(data);
       } catch (error) {

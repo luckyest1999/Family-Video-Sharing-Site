@@ -17,7 +17,10 @@ const App = () => {
         </Routes>
       </div>
       <main className="flex-grow container mx-auto p-4">
-        <VideoList />
+      <Routes>
+          <Route path="/" element={<VideoList />} />
+        </Routes>
+        
       </main>
 
       {/* Footer */}
