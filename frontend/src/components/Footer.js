@@ -1,24 +1,31 @@
-import React from "react";
+import styled from "styled-components";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white p-4">
-      <div className="container mx-auto text-center">
-        <p>&copy; 2024 Family Video Sharing. All Rights Reserved.</p>
-        <div className="space-x-4 mt-2">
-          <a href="https://facebook.com" className="hover:underline">
-            Facebook
-          </a>
-          <a href="https://twitter.com" className="hover:underline">
-            Twitter
-          </a>
-          <a href="https://instagram.com" className="hover:underline">
-            Instagram
-          </a>
-        </div>
-      </div>
-    </footer>
+    <FooterContainer>
+      <p>&copy; 2024 Movflx. All Rights Reserved.</p>
+      <Links>
+        <a href="#privacy">Privacy Policy</a>
+        <a href="#terms">Terms of Service</a>
+      </Links>
+    </FooterContainer>
   );
 };
+
+const FooterContainer = styled.footer`
+  background: #121212;
+  padding: 20px;
+  text-align: center;
+  color: #fff;
+`;
+
+const Links = styled.div`
+  margin-top: 10px;
+
+  a {
+    color: #ff385c;
+    margin: 0 10px;
+  }
+`;
 
 export default Footer;

@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const { API_DOMAIN } = require('../constants');
 
 const router = express.Router();
 
@@ -12,8 +13,8 @@ const getVideoFiles = () => {
   return files.map((file, index) => ({
     id: index + 1,
     title: file.replace(/\.[^/.]+$/, ""), // Remove file extension for title
-    url: `https://luckybackend.rstechub.com/videos/${file}`, // Generate video URL
-    thumbnail: `https://luckybackend.rstechub.com/thumbnails/${file.replace(/\.[^/.]+$/, ".jpg")}` // Assume thumbnails with the same base name
+    url: `${API_DOMAIN}/videos/${file}`, // Generate video URL
+    thumbnail: `${API_DOMAIN}/thumbnails/${file.replace(/\.[^/.]+$/, ".jpg")}` // Assume thumbnails with the same base name
   }));
 };
 
